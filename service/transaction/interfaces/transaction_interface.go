@@ -14,12 +14,10 @@ type ReconcileTransactionIn struct {
 	StartDate                time.Time
 	EndDate                  time.Time
 
-	// Key is bankIdentifier.
+	// Key is bankIdentifier and the value is bank csv path.
 	BankSystemCsvPaths map[string]string
 }
 
-type UnmatchedTransactions struct {
-}
 type ReconcileTransactionOut struct {
 	Success  bool
 	ErrorMsg string

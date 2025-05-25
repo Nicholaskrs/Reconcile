@@ -4,7 +4,7 @@ import (
 	"sort"
 	"testing"
 	"time"
-	transactionInterface "transaction_checker/service/transaction/interfaces"
+	transactionInterface "transaction_reconciler/service/transaction/interfaces"
 
 	"github.com/shopspring/decimal"
 	"github.com/stretchr/testify/assert"

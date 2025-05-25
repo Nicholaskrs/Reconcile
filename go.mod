@@ -1,4 +1,4 @@
-module transaction_checker
+module transaction_reconciler
 
 go 1.21
 

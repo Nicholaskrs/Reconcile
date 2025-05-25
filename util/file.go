@@ -7,12 +7,17 @@ import (
 	"os"
 )
 
-func ParseCSVRecordsAsync[T any](filePath string, parseFn func(record []string) (*T, error)) (<-chan []*T, <-chan error) {
+// ParseCSVRecordsAsync reads a CSV file asynchronously.
+// It takes the CSV file path and a converter function that converts each CSV row (string slice)
+// into a *T and an error.
+// It returns two channels: one for the slice of parsed results and one for any error encountered.
+// The parsing happens in a separate goroutine and results/errors are sent via channels.
+func ParseCSVRecordsAsync[T any](filePath string, rowConverter func(record []string) (*T, error)) (<-chan []*T, <-chan error) {
 	resultCh := make(chan []*T, 1)
 	errCh := make(chan error, 1)
 
 	go func() {
-		res, err := ParseCSVRecords(filePath, parseFn)
+		res, err := ParseCSVRecords(filePath, rowConverter)
 		if err != nil {
 			errCh <- err
 			return
@@ -23,8 +28,8 @@ func ParseCSVRecordsAsync[T any](filePath string, parseFn func(record []string) 
 	return resultCh, errCh
 }
 
-// ParseCSVRecords reads a CSV line-by-line and applies a parser function
-// that returns a pointer to T and an error. It collects and returns all parsed results.
+// ParseCSVRecords reads a CSV line-by-line and applies a converter function
+// that returns a *T and an error. It collects and returns all parsed results.
 func ParseCSVRecords[T any](filePath string, parseFn func(record []string) (*T, error)) ([]*T, error) {
 	file, err := os.Open(filePath)
 	if err != nil {
